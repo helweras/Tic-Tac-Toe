@@ -1,4 +1,5 @@
 from random import choice
+
 x = 'X'
 o = 'O'
 human_ = None
@@ -98,14 +99,16 @@ def step_computer(computer, human, board: list):
                 (board_copy[2], board_copy[4], board_copy[6]))
     for win in win_comb:
         count_comp = win.count(computer)
-        count_hum = win.count(human)
+
         if count_comp == 2:
             for step in win:
                 if step in true_steps:
                     board[step] = computer
                     return
-        elif count_hum == 2:
-            for step in win:
+    for deff in win_comb:
+        count_human = deff.count(human)
+        if count_human == 2:
+            for step in deff:
                 if step in true_steps:
                     board[step] = computer
                     return
@@ -171,7 +174,7 @@ def main(func):
         game_computer_step_first()
 
 
-game_board = ['_']*9
+game_board = ['_'] * 9
 # #Основня часть игры
 instruction()
 first_step()
