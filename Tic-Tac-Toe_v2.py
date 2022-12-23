@@ -97,11 +97,13 @@ def step_computer(computer, human, board: list):
                 (board_copy[2], board_copy[5], board_copy[8]),
                 (board_copy[0], board_copy[4], board_copy[8]),
                 (board_copy[2], board_copy[4], board_copy[6]))
-    for win in win_comb:
-        count_comp = win.count(computer)
-
+    preferred_steps = ([4], [0, 8, 2, 6], [1, 3, 5, 7])
+    trap_1 = ((board_copy[0] == board_copy[8] == human) or (board_copy[2] == board_copy[6] == human)
+              and board_copy.count(human) == 2)
+    for _win in win_comb:
+        count_comp = _win.count(computer)
         if count_comp == 2:
-            for step in win:
+            for step in _win:
                 if step in true_steps:
                     board[step] = computer
                     return
@@ -112,7 +114,10 @@ def step_computer(computer, human, board: list):
                 if step in true_steps:
                     board[step] = computer
                     return
-    preferred_steps = ([4], [0, 8, 2, 6], [1, 3, 5, 7])
+    if trap_1:
+        step = choice(preferred_steps[2])
+        board[step] = computer
+        return
     for i in preferred_steps:
         tmp_step = []
         for j in i:
@@ -124,6 +129,28 @@ def step_computer(computer, human, board: list):
             return board
         else:
             continue
+
+
+def who_win(board: list, computer, human):
+    board_copy = board_work(board)
+    win_comb = ((board_copy[0], board_copy[1], board_copy[2]),
+                (board_copy[3], board_copy[4], board_copy[5]),
+                (board_copy[6], board_copy[7], board_copy[8]),
+                (board_copy[0], board_copy[3], board_copy[6]),
+                (board_copy[1], board_copy[4], board_copy[7]),
+                (board_copy[2], board_copy[5], board_copy[8]),
+                (board_copy[0], board_copy[4], board_copy[8]),
+                (board_copy[2], board_copy[4], board_copy[6]))
+    for i in win_comb:
+        count_comp = i.count(computer)
+        count_human = i.count(human)
+        if count_human == 3:
+            print(f'Winner is human. He is {i[0]}')
+            return
+        elif count_comp == 3:
+            print(f'Winner is computer. He is {i[0]}')
+            return
+    return print('Not win')
 
 
 def game_human_step_first():
@@ -143,8 +170,8 @@ def game_human_step_first():
         if win(game_board):
             break
         print()
-
-    print('Игра кончена')
+    print('-----------------------')
+    who_win(game_board, computer_, human_)
 
 
 def game_computer_step_first():
@@ -164,7 +191,8 @@ def game_computer_step_first():
         if win(game_board):
             break
         print()
-    print('gg wp easy game')
+    print('----------------------')
+    who_win(game_board, computer_, human_)
 
 
 def main(func):
@@ -179,3 +207,4 @@ game_board = ['_'] * 9
 instruction()
 first_step()
 main(who_first())
+input()
