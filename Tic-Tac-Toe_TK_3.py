@@ -55,6 +55,7 @@ def step_computer(computer, human, board: list):
     def_trap_2 = {1: [0, 2], 7: [6, 8]}
     trap_1 = ((board_copy[0] == board_copy[8] == human) or (board_copy[2] == board_copy[6] == human)
               and board_copy.count(human) == 2)
+
     def trap_2():
         if board_copy.count(human) == 2:
             flag = [i for i in preferred_steps[2] if board_copy[i] == human]
@@ -76,7 +77,7 @@ def step_computer(computer, human, board: list):
                 if board_copy[ind1] == human:
                     flag_bock = True
                     break
-        return flag_bock and flag_diag
+        return flag_bock and flag_diag and board_copy.count(computer) == 1
 
     flag_trap_2 = trap_2()
     flag_trap_Phill = trap_Phill()
@@ -124,7 +125,6 @@ def step_computer(computer, human, board: list):
             lst = [j for j in i if str(j).isdigit()]
             if len(lst) == 1:
                 step = lst[0]
-        print(f'step = {step}')
         board[step] = computer
         dick[step]['text'] = computer
         dick[step]['state'] = tk.DISABLED
@@ -216,6 +216,16 @@ def change_board(borad, index, human):
             dick[num]['state'] = tk.DISABLED
 
 
+def reset():
+    global game_board
+    game_board = ['_'] * 9
+    for i in dick:
+        dick[i]['background'] = 'white'
+        dick[i]['text'] = ''
+    btn_comp['state'] = tk.NORMAL
+    btn_hum['state'] = tk.NORMAL
+
+
 win = tk.Tk()
 
 win.geometry('400x400+300+200')
@@ -232,6 +242,7 @@ btn8 = tk.Button(win, command=lambda: change_board(game_board, 7, human_), state
 btn9 = tk.Button(win, command=lambda: change_board(game_board, 8, human_), state=tk.DISABLED)
 btn_hum = tk.Button(win, text='you', command=first_step1)
 btn_comp = tk.Button(win, text='comp', command=first_step2)
+btn_reset = tk.Button(win, text='Reset', command=reset)
 
 dick = {0: btn1, 1: btn2, 2: btn3, 3: btn4, 4: btn5, 5: btn6, 6: btn7, 7: btn8, 8: btn9}
 
@@ -250,9 +261,9 @@ btn9.grid(row=2, column=2, stick='we')
 label.grid(row=3, column=0, columnspan=3)
 btn_hum.grid(row=4, column=0)
 btn_comp.grid(row=4, column=2)
+btn_reset.grid(row=5, column=0, columnspan=3, sticky='we')
 
-win.grid_columnconfigure(0, minsize=70)
-win.grid_columnconfigure(1, minsize=70)
-win.grid_columnconfigure(2, minsize=70)
-
+win.grid_columnconfigure(0, minsize=50)
+win.grid_columnconfigure(1, minsize=50)
+win.grid_columnconfigure(2, minsize=50)
 win.mainloop()
